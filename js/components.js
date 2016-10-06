@@ -30,3 +30,50 @@ Vue.component('card', {
                 </div>
             </div>`
 });
+
+Vue.component('modale', {
+    props: ['name', 'categoryTitle'],
+    data: function () {
+        return {
+            createCategory: {}
+        }
+    },
+    methods: {
+        createParseObject: function () {
+            Model.create(this.createCategory);
+            this.closeModal();
+            this.createCategory = {};
+            vm.fetchData();
+        },
+        closeModal: function () {
+            document.querySelector('dialog').close();
+        }
+    },
+    template: `<dialog class="mdl-dialog">
+                <h4 class="mdl-typography--display-1">Create a Category</h4>
+                <div class="mdl-dialog__content">
+                    <form action="#">
+                        <div class="mdl-textfield mdl-js-textfield">
+                            <input class="mdl-textfield__input"
+                                   type="text" id="sample1"
+                                   v-bind:name="name"
+                                   v-model="createCategory.name"
+                                   @keyup.enter="createParseObject">
+                            <label class="mdl-textfield__label" for="sample1">name</label>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield">
+                            <input class="mdl-textfield__input"
+                                   type="text" id="sample2"
+                                   v-bind:categoryTitle="categoryTitle"
+                                   v-model="createCategory.categoryTitle"
+                                   @keyup.enter="createParseObject">
+                            <label class="mdl-textfield__label" for="sample2">categoryTitle</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="mdl-dialog__actions">
+                    <button type="button" class="mdl-button" @click="createParseObject">Create</button>
+                    <button type="button" class="mdl-button close" @click="closeModal">Close</button>
+                </div>
+            </dialog>`
+});

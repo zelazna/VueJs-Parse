@@ -11,7 +11,6 @@
 </head>
 <body>
 <div id="container">
-
     <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
         <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>
         <div class="mdl-layout__header-row">
@@ -20,64 +19,17 @@
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>
     </header>
-    <!--<div class="mdl-grid">-->
     <section id="categories" class="mdl-cell mdl-cell--8-col ">
         <div id="app" class="mdl-grid">
-            <dialog class="mdl-dialog">
-                <h4 class="mdl-typography--display-1">Create a Category</h4>
-                <div class="mdl-dialog__content">
-                    <form action="#">
-                        <div class="mdl-textfield mdl-js-textfield">
-                            <input class="mdl-textfield__input"
-                                   type="text" id="sample1"
-                                   v-model="createCategory.name"
-                                   @keyup.enter="createParseObject">
-                            <label class="mdl-textfield__label" for="sample1">name</label>
-                        </div>
-                        <div class="mdl-textfield mdl-js-textfield">
-                            <input class="mdl-textfield__input"
-                                   type="text" id="sample2"
-                                   v-model="createCategory.categoryTitle"
-                                   @keyup.enter="createParseObject">
-                            <label class="mdl-textfield__label" for="sample2">categoryTitle</label>
-                        </div>
-                        <!--<div class="mdl-textfield mdl-js-textfield">-->
-                        <!--<input class="mdl-textfield__input" type="text" id="sample3">-->
-                        <!--<label class="mdl-textfield__label" for="sample3">Text...</label>-->
-                        <!--</div>-->
-                    </form>
-                </div>
-                <div class="mdl-dialog__actions">
-                    <button type="button" class="mdl-button" @click="createParseObject">Create</button>
-                    <button type="button" class="mdl-button close" @click="closeModal">Close</button>
-                </div>
-            </dialog>
-
+            <modale></modale>
             <card v-for="category in categories" :category="category"></card>
-
-            <!--<ul class="mdl-list">-->
-            <!--<li class="mdl-list__item" v-for="category in categories">-->
-            <!--{{ category.name }}&nbsp;-->
-            <!--<button @click="deleteParseObject" :data-id="category.id">D</button>-->
-            <!--&nbsp;-->
-            <!--<button @click="updateParseObject" :data-id="category.id">U</button>-->
-            <!--<ul v-if="category.subCategories" class="md-list">-->
-            <!--<li class="md-list__item" v-for="subcategory in category.subCategories">-->
-            <!--{{ subcategory.name }}-->
-            <!--</li>-->
-            <!--</ul>-->
-            <!--</li>-->
-            <!--</ul>-->
-
             <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect
                  mdl-button--colored mdl-shadow--4dp mdl-color--accent" @click="showModal">
                 <i class="material-icons">add</i>
             </button>
         </div>
     </section>
-
 </div>
-<!--</div>-->
 <script src="https://cdn.jsdelivr.net/parse/1.6.7/parse.js"></script>
 <script src="js/models.js"></script>
 <script src="https://unpkg.com/vue@2.0.1/dist/vue.js"></script>

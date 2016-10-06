@@ -2,7 +2,6 @@ var vm = new Vue({
     el: '#app',
     data: {
         categories: null,
-        createCategory: {},
     },
     methods: {
         fetchData: function () {
@@ -13,16 +12,6 @@ var vm = new Vue({
             Model.delete(event.target.dataset.id);
             this.fetchData();
         },
-        createParseObject: function () {
-            var data = {
-                name: this.createCategory.name,
-                categoryTitle: this.createCategory.categoryTitle
-            };
-            Model.create(data);
-            this.closeModal();
-            this.createCategory = {};
-            this.fetchData();
-        },
         updateParseObject: function () {
             var data = {name: this.name};
             Model.update(data);
@@ -30,9 +19,6 @@ var vm = new Vue({
         },
         showModal: function () {
             document.querySelector('dialog').showModal();
-        },
-        closeModal: function () {
-            document.querySelector('dialog').close();
         }
     },
     created: function () {
