@@ -22,8 +22,8 @@ Model = {
         return subCategories;
     },
 
-    findAll: ()=> {
-        var Category = Parse.Object.extend("Category");
+    findAll: (table)=> {
+        var Category = Parse.Object.extend(table);
         var query = new Parse.Query(Category);
         var data = [];
         query.find({
@@ -33,9 +33,11 @@ Model = {
                     var parseData = {};
                     parseData.id = object.id;
                     parseData.name = object.get('name');
-                    parseData.title = object.get('categoryTitle');
-                    parseData.subCategories = object.get('subCategories');
-                    if (parseData.subCategories) parseData.subCategories = Model.findSubCategories(parseData.subCategories);
+                    if (table == 'Category') {
+                        parseData.title = object.get('categoryTitle');
+                        parseData.subCategories = object.get('subCategories');
+                        if (parseData.subCategories) parseData.subCategories = Model.findSubCategories(parseData.subCategories);
+                    }
                     data.push(parseData);
                 }
             },
@@ -55,7 +57,15 @@ Model = {
         // category.set("defaultSizes", params.defaultSizes);
         // category.set("isFemale", params.isFemale);
         // category.set("gender", params.gender);
-        // category.set("subCategories", params.subCategories);
+        var subCategoriesArray = [];
+        for (var i in params.subCategories) {
+            subCategoriesArray.push({
+                "__type": "Pointer",
+                "className": "SubCategory",
+                "objectId": params.subCategories[i]
+            });
+        }
+        category.set("subCategories", subCategoriesArray);
 
         category.save(null, {
             success: category=> {

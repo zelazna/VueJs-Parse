@@ -22,6 +22,12 @@ Vue.component('card', {
                             <th>Category title</th>
                             <td>{{category.title}}</td>
                         </tr>
+                        <tr>
+                            <th>SubCategories</th>
+                            <td>
+                                <span v-if="category.subCategories" v-for="subCategory in category.subCategories">{{subCategory.name}}<br></span>
+                            </td>
+                        </tr>
                     </table>
                 </div>
                 <div class="mdl-card__actions">
@@ -32,22 +38,27 @@ Vue.component('card', {
 });
 
 Vue.component('modale', {
-    props: ['name', 'categoryTitle'],
+    props: ['name', 'categoryTitle', 'subCategories'],
     data: function () {
         return {
-            createCategory: {}
+            createCategory: {},
+            selected: []
         }
     },
     methods: {
         createParseObject: function () {
+            this.createCategory.subCategories = this.selected;
             Model.create(this.createCategory);
             this.closeModal();
             this.createCategory = {};
+            this.selected = [];
             vm.fetchData();
         },
         closeModal: function () {
             document.querySelector('dialog').close();
-        }
+            this.createCategory = {};
+            this.selected = [];
+        },
     },
     template: `<dialog class="mdl-dialog">
                 <h4 class="mdl-typography--display-1">Create a Category</h4>
@@ -69,6 +80,12 @@ Vue.component('modale', {
                                    @keyup.enter="createParseObject">
                             <label class="mdl-textfield__label" for="sample2">categoryTitle</label>
                         </div>
+                        <h4 class="mdl-typography--title">Sub Categories</h4>
+                        <div class="mdl-textfield mdl-js-textfield">
+                            <select v-model="selected" class="mdl-textfield__input" id="sample3" multiple>
+                                <option v-for="(subCategory ,index) in subCategories" :data-id="index" :value="subCategory.id">{{subCategory.name}}</option>
+                            </select>
+                        </div>
                     </form>
                 </div>
                 <div class="mdl-dialog__actions">
@@ -77,3 +94,5 @@ Vue.component('modale', {
                 </div>
             </dialog>`
 });
+
+

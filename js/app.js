@@ -2,10 +2,12 @@ var vm = new Vue({
     el: '#app',
     data: {
         categories: null,
+        subCategories: null
     },
     methods: {
         fetchData: function () {
-            this.categories = Model.findAll();
+            this.categories = Model.findAll('Category');
+            this.subCategories = Model.findAll('SubCategory');
             console.log('fetchData')
         },
         deleteParseObject: function () {
@@ -25,4 +27,3 @@ var vm = new Vue({
         this.fetchData()
     }
 });
-
