@@ -2,7 +2,8 @@ var vm = new Vue({
     el: '#app',
     data: {
         categories: null,
-        subCategories: null
+        subCategories: null,
+        edit: false
     },
     methods: {
         fetchData: function () {
@@ -17,9 +18,9 @@ var vm = new Vue({
         updateParseObject: function () {
             var data = {name: this.name};
             Model.update(data);
-            this.closeModal();
         },
         showModal: function () {
+            vm.edit = false;
             document.querySelector('dialog').showModal();
         }
     },

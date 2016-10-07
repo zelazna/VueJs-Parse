@@ -1,11 +1,15 @@
 Vue.component('card', {
     props: ['category'],
     methods: {
-        updateParseObject: function (event) {
-            vm.updateParseObject()
+        changeState: function () {
+            vm.edit = true
         },
-        deleteParseObject: function (event) {
+        deleteParseObject: function () {
             vm.deleteParseObject()
+        },
+        showModal: function () {
+            this.changeState();
+            document.querySelector('dialog').showModal();
         }
     },
     template: `<div class="mdl-cell mdl-cell--6-col mdl-card mdl-shadow--2dp">
@@ -31,14 +35,20 @@ Vue.component('card', {
                     </table>
                 </div>
                 <div class="mdl-card__actions">
-                    <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" @click="updateParseObject" :data-id="category.id">Edit</button>
-                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" @click="deleteParseObject" :data-id="category.id">Delete</button>
+                    <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" 
+                            @click="showModal" 
+                            :data-id="category.id"
+                            >Edit</button>
+                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" 
+                            @click="deleteParseObject" 
+                            :data-id="category.id"
+                            >Delete</button>
                 </div>
             </div>`
 });
 
 Vue.component('modale', {
-    props: ['name', 'categoryTitle', 'subCategories'],
+    props: ['name', 'categoryTitle', 'subCategories', 'edit'],
     data: function () {
         return {
             createCategory: {},
@@ -46,6 +56,10 @@ Vue.component('modale', {
         }
     },
     methods: {
+        updateParseObject: function (event) {
+            // vm.updateParseObject()
+            console.log('fsd')
+        },
         createParseObject: function () {
             this.createCategory.subCategories = this.selected;
             Model.create(this.createCategory);
@@ -61,7 +75,8 @@ Vue.component('modale', {
         },
     },
     template: `<dialog class="mdl-dialog">
-                <h4 class="mdl-typography--display-1">Create a Category</h4>
+                <h4 v-if="edit" class="mdl-typography--display-1">Update a Category</h4>
+                <h4 v-else class="mdl-typography--display-1">Create a Category</h4>
                 <div class="mdl-dialog__content">
                     <form action="#">
                         <div class="mdl-textfield mdl-js-textfield">
@@ -89,7 +104,8 @@ Vue.component('modale', {
                     </form>
                 </div>
                 <div class="mdl-dialog__actions">
-                    <button type="button" class="mdl-button" @click="createParseObject">Create</button>
+                    <button v-if='edit' type="button" class="mdl-button" @click="updateParseObject">Update</button>
+                    <button v-else type="button" class="mdl-button" @click="createParseObject">Create</button>
                     <button type="button" class="mdl-button close" @click="closeModal">Close</button>
                 </div>
             </dialog>`

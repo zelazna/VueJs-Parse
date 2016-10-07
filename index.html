@@ -21,10 +21,11 @@
     </header>
     <section id="categories" class="mdl-cell mdl-cell--8-col ">
         <div id="app" class="mdl-grid">
-            <modale :sub-categories="subCategories"></modale>
+            <modale :edit="edit" :sub-categories="subCategories"></modale>
             <card v-for="category in categories" :category="category"></card>
-            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect
-                 mdl-button--colored mdl-shadow--4dp mdl-color--accent" @click="showModal">
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent"
+                    @click="showModal"
+                    @click="edit=false">
                 <i class="material-icons">add</i>
             </button>
         </div>

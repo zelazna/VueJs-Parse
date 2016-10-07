@@ -89,7 +89,7 @@ Model = {
                 // category.set("subCategories", params.subCategories);
                 category.save();
             }, error: (obj, error) => {
-                console.log('error' + error.message)
+                console.log('error ' + error.message)
             }
         });
     },
