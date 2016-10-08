@@ -77,16 +77,24 @@ Model = {
         });
     },
 
-    update: (id, params) => {
+    update: (params) => {
         var query = new Parse.Query('Category');
-        query.get(id, {
+        query.get(params.id, {
             success: category=> {
                 category.set('name', params.name);
-                category.set("categoryTitle", params.categoryTitle);
+                category.set("categoryTitle", params.title);
                 // category.set("defaultSizes", params.defaultSizes);
                 // category.set("isFemale", params.isFemale);
                 // category.set("gender", params.gender);
-                // category.set("subCategories", params.subCategories);
+                var subCategoriesArray = [];
+                for (var i in params.subCategories) {
+                    subCategoriesArray.push({
+                        "__type": "Pointer",
+                        "className": "SubCategory",
+                        "objectId": params.subCategories[i]
+                    });
+                }
+                category.set("subCategories", subCategoriesArray);
                 category.save();
             }, error: (obj, error) => {
                 console.log('error ' + error.message)
