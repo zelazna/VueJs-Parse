@@ -5,10 +5,10 @@ Parse.initialize("MaLmHsgijDL1BVx6RG1i4itQqUnG4F7vf5drrFLw", "7noHnN6gJhdhrr5IYK
 
 Model = {
 
-    findSubCategories: IdsArray => {
+    findSubCategories: (IdsArray, SubCategoryTable) => {
         var subCategories = [];
         for (var i = 0; i < IdsArray.length; i++) {
-            var SubCategory = Parse.Object.extend("SubCategory");
+            var SubCategory = Parse.Object.extend(SubCategoryTable);
             var query = new Parse.Query(SubCategory);
             query.get(IdsArray[i].id, {
                 success: subs=> {
@@ -34,9 +34,10 @@ Model = {
                     parseData.id = object.id;
                     parseData.name = object.get('name');
                     if (table == 'Category') {
-                        parseData.title = object.get('categoryTitle');
+                        parseData.categoryTitle = object.get('categoryTitle');
                         parseData.subCategories = object.get('subCategories');
-                        if (parseData.subCategories) parseData.subCategories = Model.findSubCategories(parseData.subCategories);
+                        parseData.gender = object.get('gender').get('name');
+                        if (parseData.subCategories) parseData.subCategories = Model.findSubCategories(parseData.subCategories, 'SubCategory');
                     }
                     data.push(parseData);
                 }
@@ -56,13 +57,18 @@ Model = {
         category.set("categoryTitle", params.categoryTitle);
         // category.set("defaultSizes", params.defaultSizes);
         // category.set("isFemale", params.isFemale);
-        // category.set("gender", params.gender);
+        console.log(params.gender);
+        category.set("gender", {
+            "__type": "Pointer",
+            "className": "Gender",
+            "objectId": params.gender
+        });
         var subCategoriesArray = [];
         for (var i in params.subCategories) {
             subCategoriesArray.push({
                 "__type": "Pointer",
                 "className": "SubCategory",
-                "objectId": params.subCategories[i]
+                "objectId": params.subCategories[i].id
             });
         }
         category.set("subCategories", subCategoriesArray);
@@ -82,16 +88,22 @@ Model = {
         query.get(params.id, {
             success: category=> {
                 category.set('name', params.name);
-                category.set("categoryTitle", params.title);
+                category.set("categoryTitle", params.categoryTitle);
                 // category.set("defaultSizes", params.defaultSizes);
                 // category.set("isFemale", params.isFemale);
-                // category.set("gender", params.gender);
+                if (params.gender) {
+                    category.set("gender", {
+                        "__type": "Pointer",
+                        "className": "Gender",
+                        "objectId": params.gender
+                    });
+                }
                 var subCategoriesArray = [];
                 for (var i in params.subCategories) {
                     subCategoriesArray.push({
                         "__type": "Pointer",
                         "className": "SubCategory",
-                        "objectId": params.subCategories[i]
+                        "objectId": params.subCategories[i].id
                     });
                 }
                 category.set("subCategories", subCategoriesArray);

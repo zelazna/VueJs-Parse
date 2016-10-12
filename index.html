@@ -19,17 +19,26 @@
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>
     </header>
-    <section id="categories" class="mdl-cell mdl-cell--8-col ">
-        <div id="app" class="mdl-grid">
-            <modale :edit="edit" :sub-categories="subCategories" :edited-category="editedCategory"></modale>
-            <card v-for="category in categories" :category="category"></card>
-            <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent"
-                    @click="showModal"
-                    @click="edit=false">
-                <i class="material-icons">add</i>
-            </button>
-        </div>
-    </section>
+    <div id="app" class="mdl-grid">
+        <section id="categories" class="mdl-cell mdl-cell--8-col relative">
+            <div class="mdl-grid">
+                <modale :edit="edit"
+                        :sub-categories="subCategories"
+                        :edited-category="editedCategory"
+                        :genders="gender">
+                </modale>
+                <card v-for="category in categories" :category="category"></card>
+                <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent"
+                        @click="showModal"
+                        @click="edit=false">
+                    <i class="material-icons">add</i>
+                </button>
+            </div>
+        </section>
+        <section class="mdl-cell mdl-cell--4-col relative">
+            <sub-categories-list :sub-categories="subCategories"></sub-categories-list>
+        </section>
+    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/parse/1.6.7/parse.js"></script>
 <script src="https://unpkg.com/vue@2.0.1/dist/vue.js"></script>

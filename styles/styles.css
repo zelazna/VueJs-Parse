@@ -3,16 +3,24 @@ html, body {
     margin: 0;
     padding: 0;
 }
+
 h3 a {
     color: white;
     text-decoration: none;
 }
+
 .category-details {
     border-spacing: 10px;
 }
+
 .category-details th {
     text-align: right;
 }
-.mdl-dialog__title{
+
+.mdl-dialog__title {
     font-size: 2rem;
+}
+
+.relative {
+    position: relative;
 }
