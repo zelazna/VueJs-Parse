@@ -14,7 +14,7 @@ var vm = new Vue({
             this.gender = Model.findAll('Gender')
         },
         deleteCategory: function (category) {
-            Model.delete(event.target.dataset.id);
+            Model.delete(event.target.dataset.id, 'Category');
             this.categories.splice(this.categories.indexOf(category), 1);
         },
         updateCategory: function (category) {
@@ -24,9 +24,6 @@ var vm = new Vue({
         showModal: function () {
             this.edit = false;
             document.querySelector('dialog').showModal();
-        },
-        deleteSubCategory:function (subCategory) {
-            this.subCategories.splice(this.subCategories.indexOf(subCategory), 1)
         }
     },
     created: function () {

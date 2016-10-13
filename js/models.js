@@ -36,6 +36,7 @@ Model = {
                     if (table == 'Category') {
                         parseData.categoryTitle = object.get('categoryTitle');
                         parseData.subCategories = object.get('subCategories');
+                        //@todo fix gender not always getted back
                         parseData.gender = object.get('gender').get('name');
                         if (parseData.subCategories) parseData.subCategories = Model.findSubCategories(parseData.subCategories, 'SubCategory');
                     }
@@ -47,6 +48,20 @@ Model = {
             }
         });
         return data;
+    },
+
+    createSubCategory: params => {
+        var Category = Parse.Object.extend("SubCategory");
+        var category = new Category();
+        category.set("name", params);
+        category.save(null, {
+            success: category=> {
+                console.log('New object created with objectId: ' + category.id);
+            },
+            error: (category, error) => {
+                console.log('Failed to create new object, with error code: ' + error.message);
+            }
+        });
     },
 
     create: params=> {
@@ -83,7 +98,19 @@ Model = {
         });
     },
 
-    update: (params) => {
+    updateSubCategory: params=> {
+        var query = new Parse.Query('SubCategory');
+        query.get(params.id, {
+            success: category=> {
+                category.set('name', params.name);
+                category.save();
+            }, error: (obj, error) => {
+                console.log('error ' + error.message)
+            }
+        });
+    },
+
+    update: params => {
         var query = new Parse.Query('Category');
         query.get(params.id, {
             success: category=> {
@@ -114,11 +141,12 @@ Model = {
         });
     },
 
-    delete: id => {
-        var query = new Parse.Query('Category');
+    delete: (id, table) => {
+        var query = new Parse.Query(table);
         query.get(id, {
             success: obj => {
                 obj.destroy();
+                console.log('object destoyed')
             },
             error: (obj, error)=> {
                 console.log('error' + error.message)

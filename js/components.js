@@ -61,12 +61,12 @@ Vue.component('modale', {
                     <input v-if="edit" type="hidden" v-model="editedCategory.id">
                         <div class="mdl-textfield mdl-js-textfield">
                             <input v-if="edit" class="mdl-textfield__input"
-                                   pattern="[A-Z,a-z, ]*"
+                                   pattern="[A-Z,a-z,_]*"
                                    type="text" id="sample1"
                                    v-model="editedCategory.name"
                                    @keyup.enter="updateCategory">
                                <input v-else class="mdl-textfield__input"
-                                   pattern="[A-Z,a-z, ]*"
+                                   pattern="[A-Z,a-z,_]*"
                                    type="text" id="sample1"
                                    v-model="createdCategory.name"
                                    @keyup.enter="createCategory">
@@ -74,12 +74,12 @@ Vue.component('modale', {
                         </div>
                         <div class="mdl-textfield mdl-js-textfield">
                              <input v-if="edit" class="mdl-textfield__input"
-                                   pattern="[A-Z,a-z, ]*"
+                                   pattern="[A-Z,a-z,_]*"
                                    type="text" id="sample2"
                                    v-model="editedCategory.categoryTitle"
                                    @keyup.enter="createCategory">
                             <input v-else class="mdl-textfield__input"
-                                   pattern="[A-Z,a-z, ]*"
+                                   pattern="[A-Z,a-z,_]*"
                                    type="text" id="sample2"
                                    v-model="createdCategory.categoryTitle"
                                    @keyup.enter="createCategory">
@@ -160,29 +160,67 @@ Vue.component('subCategoriesList', {
                 <div class="mdl-list__item">
                     <span class="mdl-list__item-primary-content mdl-layout-title">SubCategories</span>
                     <span class="mdl-list__item-secondary-action">
-                    <button @click="createSubCategory" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create</button>
-                     </span>
+                        <button @click="create=true" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Create</button>
+                    </span>
                 </div>
-                <div v-for="subCategory in subCategories" class="mdl-list__item">
-                    <a class="mdl-list__item-primary-content" target="_blank">{{subCategory.name}}</a>
+                <div v-show="create" class="mdl-list__item">
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <input v-model="newSubcategory.name" class="mdl-textfield__input" type="text" id="newSubCat" pattern="[A-Z,a-z, ]*">
+                        <label class="mdl-textfield__label" for="newSubCat">New SubCategory</label>
+                        <span class="mdl-textfield__error">Letters and spaces only</span>
+                    </div>
                     <span class="mdl-list__item-secondary-action">
-                        <button @click="editSubCategory" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Edit</button>
-                        <button :data-id="subCategory.id" @click="deleteSubCategory" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Delete</button>
+                        <button @click="createSubCategory" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">OK</button>
+                    </span>
+                </div>
+                <div v-for="( subCategory,index ) in subCategories" class="mdl-list__item">
+                    <a @dblclick="editSubCategory(subCategory)" class="mdl-list__item-primary-content" target="_blank">{{subCategory.name}}</a>
+                    <div class="mdl-textfield mdl-js-textfield">
+                    <input class="edit mdl-textfield__input" type="text"
+                        v-model="subCategory.name"
+                        @blur="doneEdit(subCategory)"
+                        @keyup.enter="doneEdit(subCategory)"
+                        @keyup.esc="cancelEdit(subCategory)">
+                    </div>
+                    <span class="mdl-list__item-secondary-action">
+                        <!--<button @click="edit=true" class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect">Edit</button>-->
+                        <button :data-id="index" @click="deleteSubCategory" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Delete</button>
                     </span>
                 </div>
             </div>`,
     props: ['subCategories'],
+    data: function () {
+        return {
+            create: false,
+            edit: false,
+            newSubcategory: {},
+            editedCategory: {}
+        }
+    },
     methods: {
         createSubCategory: function () {
-
+            if (!this.newSubcategory.name) {
+                return;
+            }
+            Model.createSubCategory(this.newSubcategory.name);
+            this.subCategories.push(this.newSubcategory);
+            this.newSubcategory = {};
+            this.create = false;
         },
-        editSubCategory: function () {
-
+        cancelEdit: function (subCategory) {
+            console.log(subCategory);
         },
-        deleteSubCategory: function () {
-            // this.subCategories.splice(this.subCategories.indexOf(subCategory), 1)
-            console.log(this.subCategory);
-            vm.deleteSubCategory(this.subCategory);
+        editSubCategory: function (subCategory) {
+            console.log(subCategory);
+        },
+        doneEdit: function (subCategory) {
+            Model.updateSubCategory(subCategory);
+            console.log(subCategory);
+        },
+        deleteSubCategory: function (e) {
+            var subCategoryIndex = e.target.dataset.id;
+            if (this.subCategories[subCategoryIndex].id)Model.delete(this.subCategories[subCategoryIndex].id, 'SubCategory');
+            this.subCategories.splice(subCategoryIndex, 1);
         },
     }
 });
