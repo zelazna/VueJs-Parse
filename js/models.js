@@ -1,7 +1,6 @@
-//PROD
-// Parse.initialize("CTl4HWw9MvRMRCrZ5AFN2uVXzlDMBZn5bqUNigxr", "5uCrSmtP74r7K40pgZ9zUWEaoSTWULsWySqElfEC");
-//DEV
-Parse.initialize("MaLmHsgijDL1BVx6RG1i4itQqUnG4F7vf5drrFLw", "7noHnN6gJhdhrr5IYKI7YrMcNI30d23ZG8AQtnhq");
+//Parse Key and Url
+Parse.initialize("YOUR_APP_ID");
+Parse.serverURL = 'http://YOUR_PARSE_SERVER:1337/parse'
 
 Model = {
 
