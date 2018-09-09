@@ -9,14 +9,12 @@ Model = {
         for (var i = 0; i < IdsArray.length; i++) {
             var SubCategory = Parse.Object.extend(SubCategoryTable);
             var query = new Parse.Query(SubCategory);
-            query.get(IdsArray[i].id, {
-                success: subs=> {
+            query.get(IdsArray[i].id).then(subs=> {
                     var subCategoriesObject = {};
                     subCategoriesObject.name = subs.get('name');
                     subCategoriesObject.id = subs.id;
                     subCategories.push(subCategoriesObject);
-                }
-            });
+                });
         }
         return subCategories;
     },
@@ -25,8 +23,7 @@ Model = {
         var Category = Parse.Object.extend(table);
         var query = new Parse.Query(Category);
         var data = [];
-        query.find({
-            success: results=> {
+        query.find().then( results=> {
                 for (var i = 0; i < results.length; i++) {
                     var object = results[i];
                     var parseData = {};
@@ -36,16 +33,15 @@ Model = {
                         parseData.categoryTitle = object.get('categoryTitle');
                         parseData.subCategories = object.get('subCategories');
                         //@todo fix gender not always getted back
-                        parseData.gender = object.get('gender').get('name');
+                        var gender = object.get('gender');
+                        parseData.gender = gender? gender.get('name') : "";
                         if (parseData.subCategories) parseData.subCategories = Model.findSubCategories(parseData.subCategories, 'SubCategory');
                     }
                     data.push(parseData);
                 }
-            },
-            error: error=> {
+            }).catch(error=> {
                 console.log("Error: " + error.code + " " + error.message);
-            }
-        });
+            });
         return data;
     },
 
@@ -53,14 +49,11 @@ Model = {
         var Category = Parse.Object.extend("SubCategory");
         var category = new Category();
         category.set("name", params);
-        category.save(null, {
-            success: category=> {
+        category.save().then(category=> {
                 console.log('New object created with objectId: ' + category.id);
-            },
-            error: (category, error) => {
+            }).catch((category, error) => {
                 console.log('Failed to create new object, with error code: ' + error.message);
-            }
-        });
+            });
     },
 
     create: params=> {
@@ -87,32 +80,26 @@ Model = {
         }
         category.set("subCategories", subCategoriesArray);
 
-        category.save(null, {
-            success: category=> {
+        category.save().then(category=> {
                 console.log('New object created with objectId: ' + category.id);
-            },
-            error: (category, error) => {
+            }).catch((category, error) => {
                 console.log('Failed to create new object, with error code: ' + error.message);
-            }
-        });
+            });
     },
 
     updateSubCategory: params=> {
         var query = new Parse.Query('SubCategory');
-        query.get(params.id, {
-            success: category=> {
+        query.get(params.id).then(category=> {
                 category.set('name', params.name);
                 category.save();
-            }, error: (obj, error) => {
+            }).catch( (obj, error) => {
                 console.log('error ' + error.message)
-            }
-        });
+            });
     },
 
     update: params => {
         var query = new Parse.Query('Category');
-        query.get(params.id, {
-            success: category=> {
+        query.get(params.id).then(category=> {
                 category.set('name', params.name);
                 category.set("categoryTitle", params.categoryTitle);
                 // category.set("defaultSizes", params.defaultSizes);
@@ -134,22 +121,18 @@ Model = {
                 }
                 category.set("subCategories", subCategoriesArray);
                 category.save();
-            }, error: (obj, error) => {
+            }).catch((obj, error) => {
                 console.log('error ' + error.message)
-            }
-        });
+            });
     },
 
     delete: (id, table) => {
         var query = new Parse.Query(table);
-        query.get(id, {
-            success: obj => {
+        query.get(id).then(obj => {
                 obj.destroy();
                 console.log('object destoyed')
-            },
-            error: (obj, error)=> {
+            }).catch((obj, error)=> {
                 console.log('error' + error.message)
-            }
-        });
+            });
     }
 };
